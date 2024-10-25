@@ -13,6 +13,10 @@ dotenv.config();
 app.use(express.json());
 
 // Rotas
+app.get('/', (req, res) => {
+    res.send('Olá, mundo! Este é um texto retornado pela rota.');
+});
+
 app.use('/users', userRoutes);
 
 app.use('/login', authRoutes);

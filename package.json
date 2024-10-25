@@ -2,7 +2,7 @@
   "name": "srs-app-backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "keywords": [],
   "author": "",
@@ -24,6 +24,8 @@
   },
   "scripts": {
     "dev": "nodemon server.js",
-    "seed": "node prisma/seed.js"
+    "build": "prisma generate", 
+    "seed": "node prisma/seed.js",
+    "start": "node server.js"
   }
 }

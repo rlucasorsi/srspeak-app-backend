@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgres://postgres:Lucasorsi2907@db:5432/app-srs-local?schema=public
+    depends_on:
+      - db
+
+  db:
+    image: postgres:16
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: Lucasorsi2907
+      POSTGRES_DB: app-srs-local?schema=public
+    ports:
+      - "5432:5432"

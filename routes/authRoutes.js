@@ -4,6 +4,7 @@ import {userLogin} from '../controllers/authController.js';
 
 
 // Rota para login do usuário
+router.get('/', )
 router.post('/', userLogin);
 
 
