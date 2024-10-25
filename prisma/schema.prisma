@@ -1,0 +1,105 @@
+// prisma/schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // ou "sqlite", "mysql", dependendo do seu banco
+  url      = env("DATABASE_URL") // Variável de ambiente para a conexão com o banco
+}
+
+model User {
+  id             Int             @id @default(autoincrement())
+  name           String
+  email          String          @unique
+  password_hash  String
+  status         Boolean         @default(true)
+  created_at     DateTime        @default(now())
+  updated_at     DateTime        @updatedAt
+  progress       Progress[]
+  userModules    UserModule[]
+  sessions       Session[]
+  passwordResets PasswordReset[]
+  userAccessRoles UserAccessRole[]
+}
+
+model Role {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique // Ex: "user", "admin", "professor", "help_center_primario"
+  description String? // Descrição do papel
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  userAccessRoles UserAccessRole[]
+}
+
+model UserAccessRole {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  roleId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  role      Role     @relation(fields: [roleId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PasswordReset {
+  id           String   @id @default(cuid())
+  userId       Int
+  securityCode String
+  verified     Boolean  @default(false)
+  expiresAt    DateTime
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId]) // Cria um índice no campo userId para melhor desempenho
+}
+
+model Module {
+  id          Int          @id @default(autoincrement())
+  name        String
+  description String?
+  cards       Card[]
+  userModules UserModule[]
+}
+
+model Card {
+  id         Int        @id @default(autoincrement())
+  module_id  Int // Campo definido corretamente
+  module     Module     @relation(fields: [module_id], references: [id]) // Usando module_id aqui
+  question   String
+  answer     String
+  difficulty Int?
+  progress   Progress[]
+}
+
+model Progress {
+  id             Int       @id @default(autoincrement())
+  user_id        Int // Campo definido corretamente
+  user           User      @relation(fields: [user_id], references: [id])
+  card_id        Int // Campo definido corretamente
+  card           Card      @relation(fields: [card_id], references: [id])
+  last_review    DateTime?
+  times_reviewed Int?
+  last_result    Int? // Campo numérico entre 1 e 4
+}
+
+model UserModule {
+  id          Int      @id @default(autoincrement())
+  user_id     Int // Campo definido corretamente
+  user        User     @relation(fields: [user_id], references: [id])
+  module_id   Int // Campo definido corretamente
+  module      Module   @relation(fields: [module_id], references: [id])
+  unlocked_at DateTime @default(now())
+}
+
+model Session {
+  id         Int       @id @default(autoincrement())
+  user_id    Int
+  user       User      @relation(fields: [user_id], references: [id])
+  token      String
+  created_at DateTime  @default(now())
+  expires_at DateTime?
+}
