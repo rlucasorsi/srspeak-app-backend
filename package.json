@@ -23,6 +23,7 @@
     "prisma": "^5.20.0"
   },
   "scripts": {
+    "postinstall": "prisma generate",
     "dev": "nodemon server.js",
     "build": "prisma generate", 
     "seed": "node prisma/seed.js",

@@ -5,7 +5,10 @@ import errorHandler from './middleware/errorHandler.js';
 import authRoutes from './routes/authRoutes.js';
 import resetPasswordRoutes from './routes/resetPasswordRoutes.js';
 import dotenv from 'dotenv';
+import cors from 'cors';
 
+
+app.use(cors()); 
 // Carrega as variáveis de ambiente do arquivo .env
 dotenv.config();
 
@@ -13,9 +16,6 @@ dotenv.config();
 app.use(express.json());
 
 // Rotas
-app.get('/', (req, res) => {
-    res.send('Olá, mundo! Este é um texto retornado pela rota.');
-});
 
 app.use('/users', userRoutes);
 
